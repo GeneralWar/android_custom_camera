@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/camera_surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:alpha=".5"
+                android:layout_above="@+id/camera_image_border" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:background="#000000"
+                android:alpha=".5"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/camera_image_border" />
+
+            <ImageView
+                android:id="@+id/camera_image_border"
+                android:layout_width="@dimen/px240"
+                android:layout_height="@dimen/px320"
+                android:layout_centerInParent="true"
+                android:background="@drawable/border" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:background="#000000"
+                android:alpha=".5"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/camera_image_border" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:alpha=".5"
+                android:layout_below="@+id/camera_image_border" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px96">
+
+            <Button
+                android:id="@+id/camera_button_take"
+                android:layout_width="@dimen/px64"
+                android:layout_height="@dimen/px64"
+                android:background="@drawable/icon_camera"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textSize="@dimen/sp18"
+                android:id="@+id/camera_button_cancel"
+                android:layout_above="@+id/camera_button_take"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check"
+                android:textSize="@dimen/sp18"
+                android:id="@+id/camera_button_check"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/camera_button_take" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

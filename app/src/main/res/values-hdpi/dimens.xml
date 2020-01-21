@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="px64">96px</dimen>
+    <dimen name="px96">144px</dimen>
+    <dimen name="px240">320px</dimen>
+    <dimen name="px320">480px</dimen>
+    <dimen name="sp18">18sp</dimen>
+</resources>
