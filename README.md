@@ -50,3 +50,7 @@ Call ```Camera.open``` to open a camera device and start a repeating capture ses
   
 Call ```Camera.capture``` to stop current repeating capture session and request a capture (try to capture a bitmap).
 - @return True as success, false as failure.
+
+## Caution
+
+I ***do not*** cut image to fit the border.
