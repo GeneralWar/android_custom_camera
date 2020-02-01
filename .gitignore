@@ -3,6 +3,6 @@
 
 gradle
 *.iml
-*.properties
+local.properties
 gradlew
 gradlew.bat

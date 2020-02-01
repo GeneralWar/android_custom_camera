@@ -3,5 +3,5 @@
     <dimen name="px96">288px</dimen>
     <dimen name="px240">720px</dimen>
     <dimen name="px320">960px</dimen>
-    <dimen name="sp18">36sp</dimen>
+    <dimen name="sp18">24sp</dimen>
 </resources>

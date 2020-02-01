@@ -9,17 +9,22 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.hardware.camera2.*;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.WindowManager;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Camera extends CameraDevice.StateCallback {
@@ -47,16 +52,45 @@ public class Camera extends CameraDevice.StateCallback {
         mCallback = callback;
     }
 
+    private Size getPreferredSize(int preferredWidth, int preferredHeight, CameraCharacteristics characteristics) {
+        WindowManager.LayoutParams params = mOwner.getWindow().getAttributes();
+        preferredWidth = 0 == preferredWidth ? params.width : preferredWidth;
+        preferredHeight = 0 == preferredHeight ? params.height : preferredHeight;
+        if (null == mCameraManager) {
+            return new Size(preferredWidth, preferredHeight);
+        }
+        StreamConfigurationMap configurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        Size[] sizes = configurationMap.getOutputSizes(ImageFormat.JPEG);
+        Arrays.sort(sizes, new Comparator<Size>() {
+            @Override
+            public int compare(Size a, Size b) {
+                long aw = a.getWidth();
+                long ah = a.getHeight();
+                long bw = b.getWidth();
+                long bh = b.getHeight();
+                long sa = aw * aw + ah * ah;
+                long sb = bw * bw + bh * bh;
+                if (sa < sb) return -1;
+                if (sa > sb) return 1;
+                return 0;
+            }
+        });
+        for (int i = 0; i < sizes.length; ++i) {
+            Size size = sizes[i];
+            if (preferredWidth <= size.getWidth() && preferredHeight <= size.getHeight()) {
+                return size;
+            }
+        }
+        return sizes[sizes.length - 1];
+    }
+
     @SuppressLint("MissingPermission")
-    public boolean open(){
+    public boolean open(int preferredWidth, int preferredHeight){
         Log.d("Camera", "try to open camera");
         if (null != mCameraDevice){
             this.captureToRender();
             return true;
         }
-
-        WindowManager.LayoutParams params = mOwner.getWindow().getAttributes();
-        mTarget.setFixedSize(params.width, params.height);
 
         CameraManager manager = mCameraManager = mOwner.getSystemService(CameraManager.class);
         try {
@@ -67,6 +101,10 @@ public class Camera extends CameraDevice.StateCallback {
                 CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(deviceIds[i]);
                 if (CameraCharacteristics.LENS_FACING_BACK == characteristics.get(CameraCharacteristics.LENS_FACING)) {
                     targetId = deviceIds[i];
+
+                    Size preferredSize = this.getPreferredSize(preferredWidth, preferredHeight, characteristics);
+                    // You must call setFixedSize before open a camera device, or it'll fail.
+                    mTarget.setFixedSize(preferredSize.getWidth(), preferredSize.getHeight());
                     break;
                 }
             }

@@ -2,14 +2,16 @@ package per.general.customcamera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +22,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (this.findViewById(R.id.button_camera) == v){
-         this.startActivityForResult(new Intent(this, CameraActivity.class), 0);
+//            CameraActivity.show(this);
+            Size size = Utils.getScreenSize(this);
+            CameraActivity.show(this, size.getWidth(), size.getHeight());
         }
     }
 
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
 
         ImageView imageView = (ImageView)this.findViewById(R.id.image_view);
-        imageView.setImageBitmap((Bitmap) data.getParcelableExtra("data"));
+        Bitmap bitmap = CameraActivity.decodeBitmap(data);
+        if (null != bitmap) {
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, -bitmap.getWidth(), bitmap.getHeight(), false));
+        }
     }
 }
