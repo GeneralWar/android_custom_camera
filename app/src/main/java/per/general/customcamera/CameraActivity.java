@@ -105,6 +105,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             Log.d("CameraActivity", "surface view created");
             mTakeButton.setVisibility(View.VISIBLE);
 
+            // You must create a Camera after the SurfaceView was created, otherwise, SurfaceHolder won't work probably and capture might fail.
             mCamera = new Camera(mSelf, holder, mCameraCallback);
             mCamera.open(mPreferredWidth, mPreferredHeight);
         }
@@ -173,22 +174,30 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    static public void show(Activity parent) {
-        parent.startActivityForResult(new Intent(parent, CameraActivity.class), 0);
+    static public void show(Activity parent, int requestCode) {
+        parent.startActivityForResult(new Intent(parent, CameraActivity.class), requestCode);
     }
 
-    static public void show(Activity parent, int preferredWidth, int preferredHeight) {
+    static public void show(Activity parent, int preferredWidth, int preferredHeight, int requestCode) {
         Intent intent = new Intent(parent, CameraActivity.class);
         intent.putExtra(KEY_PREFERRED_WIDTH, preferredWidth);
         intent.putExtra(KEY_PREFERRED_HEIGHT, preferredHeight);
-        parent.startActivityForResult(intent, 0);
+        parent.startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Because intent has a limit for data size, so we cached the pictures captured by this activity and return a key as result.
+     * @param data The intent data received in previous Activity.onActivityResult
+     * @return The raw bitmap captured by Camera.
+     */
     static public Bitmap decodeBitmap(Intent data) {
         return sBitmapMap.get(data.getStringExtra(KEY_BITMAP_KEY));
     }
 
-    static public void Clear() {
+    /**
+     * If you do not need pictures captured by this activity any more, you should call this function to release the cache.
+     */
+    static public void clear() {
         sBitmapMap.clear();
     }
 }

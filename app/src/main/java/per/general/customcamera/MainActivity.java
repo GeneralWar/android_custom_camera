@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (this.findViewById(R.id.button_camera) == v){
 //            CameraActivity.show(this);
             Size size = Utils.getScreenSize(this);
-            CameraActivity.show(this, size.getWidth(), size.getHeight());
+            CameraActivity.show(this, size.getWidth(), size.getHeight(), 0);
         }
     }
 

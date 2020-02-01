@@ -46,6 +46,12 @@ public class Camera extends CameraDevice.StateCallback {
     private Bitmap mResult = null;
     public Bitmap getResult() { return mResult; }
 
+    /**
+     * Create a new camera.
+     * @param owner The activity who create this camera.
+     * @param target The SurfaceHolder of SurfaceView which to display capture session.
+     * @param callback The callback to response captured bitmap.
+     */
     public Camera(@NonNull Activity owner, @NonNull SurfaceHolder target, @NonNull Callback callback){
         mOwner = owner;
         mTarget = target;
@@ -84,6 +90,12 @@ public class Camera extends CameraDevice.StateCallback {
         return sizes[sizes.length - 1];
     }
 
+    /**
+     * Open a camera device and start a repeating capture session.
+     * @param preferredWidth It may be 0.
+     * @param preferredHeight It may be 0.
+     * @return True as success, false as failure.
+     */
     @SuppressLint("MissingPermission")
     public boolean open(int preferredWidth, int preferredHeight){
         Log.d("Camera", "try to open camera");
@@ -117,6 +129,10 @@ public class Camera extends CameraDevice.StateCallback {
         return false;
     }
 
+    /**
+     * Stop current repeating capture session and request a capture.
+     * @return True as success, false as failure.
+     */
     public boolean capture(){
         if (null == mCaptureSession){
             return false;
@@ -220,11 +236,11 @@ public class Camera extends CameraDevice.StateCallback {
 
     @Override
     public void onDisconnected(@NonNull CameraDevice camera) {
-
+        mCallback.response(null);
     }
 
     @Override
     public void onError(@NonNull CameraDevice camera, int error) {
-
+        mCallback.response(null);
     }
 }
